@@ -2,7 +2,7 @@
 Generic Autosplitter for GBA games emulated in BizHawk
 
 ## Installing
-  - Grab [LiveSplit.DeSmuMEGBA.dll](https://raw.githubusercontent.com/ShootMe/LiveSplit.GBA/master/Components/LiveSplit.GBA.dll)
+  - Grab [LiveSplit.GBA.dll](https://raw.githubusercontent.com/ShootMe/LiveSplit.GBA/master/Components/LiveSplit.GBA.dll)
   - Close LiveSplit.exe if it is open
   - Open your LiveSplit/Components folder and copy the dll to this folder
   - Open LiveSplit.exe
