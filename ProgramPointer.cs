@@ -3,7 +3,8 @@ using System;
 using System.Diagnostics;
 namespace LiveSplit.GBA {
 	public enum PointerVersion {
-		V1
+		Win10,
+		Win7
 	}
 	public enum AutoDeref {
 		None,
@@ -80,13 +81,13 @@ namespace LiveSplit.GBA {
 				Pointer = GetVersionedFunctionPointer(program);
 				if (Pointer != IntPtr.Zero) {
 					if (AutoDeref != AutoDeref.None) {
-						if (MemoryReader.is64Bit) {
+						if (MemoryReader.is64Bit && Version == PointerVersion.Win10) {
 							Pointer = (IntPtr)program.Read<ulong>(Pointer);
 						} else {
 							Pointer = (IntPtr)program.Read<uint>(Pointer);
 						}
 						if (AutoDeref == AutoDeref.Double) {
-							if (MemoryReader.is64Bit) {
+							if (MemoryReader.is64Bit && Version == PointerVersion.Win10) {
 								Pointer = (IntPtr)program.Read<ulong>(Pointer);
 							} else {
 								Pointer = (IntPtr)program.Read<uint>(Pointer);
@@ -103,9 +104,14 @@ namespace LiveSplit.GBA {
 				return (info.Protect & 0x40) != 0 && (info.State & 0x1000) != 0 && (info.Type & 0x20000) != 0;
 			};
 			//BizHawk.Client.Common.Global.get_SystemInfo
-			ProgramSignature signature = new ProgramSignature(PointerVersion.V1, "488B0949BB????????????????390941FF13488BF0488BCEE8", -8);
-
+			ProgramSignature signature = new ProgramSignature(PointerVersion.Win7, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB", 9);
 			IntPtr ptr = searcher.FindSignature(program, signature.Signature);
+
+			if (ptr == IntPtr.Zero) {
+				signature = new ProgramSignature(PointerVersion.Win10, "488B0949BB????????????????390941FF13488BF0488BCEE8", -8);
+				ptr = searcher.FindSignature(program, signature.Signature);
+			}
+
 			if (ptr != IntPtr.Zero) {
 				AutoDeref = AutoDeref.Single;
 				Version = signature.Version;
