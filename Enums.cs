@@ -35,8 +35,6 @@ namespace LiveSplit.GBA {
 		IWRAM,
 		[Description("EWRAM")]
 		EWRAM,
-		[Description("CWRAM")]
-		CWRAM,
 		[Description("PALRAM")]
 		PALRAM,
 		[Description("VRAM")]

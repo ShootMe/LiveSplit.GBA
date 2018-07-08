@@ -7,7 +7,6 @@ namespace LiveSplit.GBA {
 		public Process Program { get; set; }
 		public bool IsHooked { get; set; } = false;
 		private DateTime lastHooked;
-
 		public SplitterMemory() {
 			lastHooked = DateTime.MinValue;
 		}
@@ -15,16 +14,29 @@ namespace LiveSplit.GBA {
 			return RAM.GetPointer(Program).ToString("X");
 		}
 		public T Read<T>(RAMSection section, uint address) where T : struct {
+			bool mGBA = RAM.Read<uint>(Program, 0x0, 0x30, 0x8, 0x18) == 8;
+			if (mGBA) {
+				switch (section) {
+					case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x38, 0x28, (int)address);
+					case RAMSection.EWRAM: return RAM.Read<T>(Program, 0x0, 0x40, 0x28, (int)address);
+					case RAMSection.BIOS: return RAM.Read<T>(Program, 0x0, 0x48, 0x28, (int)address);
+					case RAMSection.PALRAM: return RAM.Read<T>(Program, 0x0, 0x50, 0x28, (int)address);
+					case RAMSection.VRAM: return RAM.Read<T>(Program, 0x0, 0x58, 0x28, (int)address);
+					case RAMSection.OAM: return RAM.Read<T>(Program, 0x0, 0x60, 0x28, (int)address);
+					case RAMSection.ROM: return RAM.Read<T>(Program, 0x0, 0x68, 0x28, (int)address);
+					case RAMSection.SRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x28, (int)address);
+				}
+			}
+
 			switch (section) {
-				case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x38, 0x28, (int)address);
-				case RAMSection.EWRAM: return RAM.Read<T>(Program, 0x0, 0x40, 0x28, (int)address);
-				case RAMSection.BIOS: return RAM.Read<T>(Program, 0x0, 0x48, 0x28, (int)address);
-				case RAMSection.PALRAM: return RAM.Read<T>(Program, 0x0, 0x50, 0x28, (int)address);
-				case RAMSection.VRAM: return RAM.Read<T>(Program, 0x0, 0x58, 0x28, (int)address);
-				case RAMSection.OAM: return RAM.Read<T>(Program, 0x0, 0x60, 0x28, (int)address);
-				case RAMSection.ROM: return RAM.Read<T>(Program, 0x0, 0x68, 0x28, (int)address);
-				case RAMSection.SRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x28, (int)address);
-				case RAMSection.CWRAM: return RAM.Read<T>(Program, 0x0, 0x78, 0x28, (int)address);
+				case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x10, 0x28, (int)address);
+				case RAMSection.EWRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x18, 0x28, (int)address);
+				case RAMSection.BIOS: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x20, 0x28, (int)address);
+				case RAMSection.PALRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x28, 0x28, (int)address);
+				case RAMSection.VRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x30, 0x28, (int)address);
+				case RAMSection.OAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x38, 0x28, (int)address);
+				case RAMSection.ROM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x40, 0x28, (int)address);
+				case RAMSection.SRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x48, 0x28, (int)address);
 			}
 			return default(T);
 		}
