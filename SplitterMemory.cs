@@ -11,10 +11,10 @@ namespace LiveSplit.GBA {
 			lastHooked = DateTime.MinValue;
 		}
 		public string Pointer() {
-			return RAM.GetPointer(Program).ToString("X");
+			return RAM.GetPointer(Program).ToString("X") + " - " + RAM.Version.ToString();
 		}
 		public T Read<T>(RAMSection section, uint address) where T : struct {
-			bool mGBA = RAM.Read<uint>(Program, 0x0, 0x30, 0x8, 0x18) == 8;
+			bool mGBA = RAM.Read<uint>(Program, 0x0, 0x30, 0x8, 0x18) == 10;
 			if (mGBA) {
 				switch (section) {
 					case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x38, 0x28, (int)address);
