@@ -52,7 +52,7 @@
 			this.flowMain.Location = new System.Drawing.Point(0, 0);
 			this.flowMain.Margin = new System.Windows.Forms.Padding(0);
 			this.flowMain.Name = "flowMain";
-			this.flowMain.Size = new System.Drawing.Size(285, 27);
+			this.flowMain.Size = new System.Drawing.Size(302, 27);
 			this.flowMain.TabIndex = 0;
 			this.flowMain.WrapContents = false;
 			this.flowMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowMain_DragDrop);
@@ -67,16 +67,16 @@
 			this.flowOptions.Location = new System.Drawing.Point(0, 0);
 			this.flowOptions.Margin = new System.Windows.Forms.Padding(0);
 			this.flowOptions.Name = "flowOptions";
-			this.flowOptions.Size = new System.Drawing.Size(285, 27);
+			this.flowOptions.Size = new System.Drawing.Size(302, 27);
 			this.flowOptions.TabIndex = 0;
 			// 
 			// lblNote
 			// 
 			this.lblNote.Location = new System.Drawing.Point(66, 0);
 			this.lblNote.Name = "lblNote";
-			this.lblNote.Size = new System.Drawing.Size(216, 23);
+			this.lblNote.Size = new System.Drawing.Size(233, 27);
 			this.lblNote.TabIndex = 1;
-			this.lblNote.Text = "Note: Offset is in Hex, Value is in Decimal";
+			this.lblNote.Text = "Note: Offset is in Hex, Value is in Decimal. Bitwise Mask: (Value AND RAM) != Last Value";
 			this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// SplitterSettings
@@ -89,7 +89,7 @@
 			this.Controls.Add(this.flowMain);
 			this.Margin = new System.Windows.Forms.Padding(0);
 			this.Name = "SplitterSettings";
-			this.Size = new System.Drawing.Size(285, 27);
+			this.Size = new System.Drawing.Size(302, 27);
 			this.Load += new System.EventHandler(this.Settings_Load);
 			this.flowMain.ResumeLayout(false);
 			this.flowMain.PerformLayout();

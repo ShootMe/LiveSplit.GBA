@@ -59,6 +59,7 @@ namespace LiveSplit.GBA {
 					case SplitType.Equals: shouldSplit = value == split.Value && value != split.LastValue; break;
 					case SplitType.GreaterThan: shouldSplit = value > split.Value && value != split.LastValue; break;
 					case SplitType.LessThan: shouldSplit = value < split.Value && value != split.LastValue; break;
+					case SplitType.Bitwise:
 					case SplitType.Changed: shouldSplit = value != split.LastValue; break;
 					case SplitType.ChangedFrom: shouldSplit = split.LastValue == split.Value && value != split.LastValue; break;
 				}
@@ -86,6 +87,9 @@ namespace LiveSplit.GBA {
 					case ValueSize.UInt32: value = mem.Read<uint>(split.Section, split.Offset); break;
 					case ValueSize.Int32: value = mem.Read<int>(split.Section, split.Offset); break;
 					case ValueSize.Float: value = (long)mem.Read<float>(split.Section, split.Offset); break;
+				}
+				if (split.Type == SplitType.Bitwise) {
+					value &= split.Value;
 				}
 			}
 			return value;

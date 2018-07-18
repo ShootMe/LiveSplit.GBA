@@ -11,6 +11,8 @@ namespace LiveSplit.GBA {
 		Changed,
 		[Description("Changed From")]
 		ChangedFrom,
+		[Description("Bitwise Mask")]
+		Bitwise,
 	}
 	public enum ValueSize {
 		[Description("8 U-Bits")]
