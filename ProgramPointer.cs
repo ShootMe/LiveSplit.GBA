@@ -4,6 +4,7 @@ using System.Diagnostics;
 namespace LiveSplit.GBA {
 	public enum PointerVersion {
 		None,
+		Win10_223,
 		Win10_221,
 		Win7_221,
 		Win7_230
@@ -83,13 +84,13 @@ namespace LiveSplit.GBA {
 				Pointer = GetVersionedFunctionPointer(program);
 				if (Pointer != IntPtr.Zero) {
 					if (AutoDeref != AutoDeref.None) {
-						if (MemoryReader.is64Bit && Version == PointerVersion.Win10_221) {
+						if (MemoryReader.is64Bit && (Version == PointerVersion.Win10_221 || Version == PointerVersion.Win10_223)) {
 							Pointer = (IntPtr)program.Read<ulong>(Pointer);
 						} else {
 							Pointer = (IntPtr)program.Read<uint>(Pointer);
 						}
 						if (AutoDeref == AutoDeref.Double) {
-							if (MemoryReader.is64Bit && Version == PointerVersion.Win10_221) {
+							if (MemoryReader.is64Bit && (Version == PointerVersion.Win10_221 || Version == PointerVersion.Win10_223)) {
 								Pointer = (IntPtr)program.Read<ulong>(Pointer);
 							} else {
 								Pointer = (IntPtr)program.Read<uint>(Pointer);
@@ -105,9 +106,16 @@ namespace LiveSplit.GBA {
 			searcher.MemoryFilter = delegate (MemInfo info) {
 				return (info.Protect & 0x40) != 0 && (info.State & 0x1000) != 0 && (info.Type & 0x20000) != 0;
 			};
-			//BizHawk.Client.Common.Global.get_SystemInfo
-			ProgramSignature signature = new ProgramSignature(PointerVersion.Win7_221, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB", 9);
+
+			//BizHawk.Client.EmuHawk.DisplayManager.CalculateCompleteContentPadding
+			ProgramSignature signature = new ProgramSignature(PointerVersion.Win10_223, "448B41104489442438488BCA488D5424404C8D442428E8", 38);
 			IntPtr ptr = searcher.FindSignature(program, signature.Signature);
+
+			if (ptr == IntPtr.Zero) {
+				//BizHawk.Client.Common.Global.get_SystemInfo
+				signature = new ProgramSignature(PointerVersion.Win7_221, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB", 9);
+				ptr = searcher.FindSignature(program, signature.Signature);
+			}
 
 			if (ptr == IntPtr.Zero) {
 				signature = new ProgramSignature(PointerVersion.Win7_230, "488BF8BA????????488B124885D20F84", 4);
