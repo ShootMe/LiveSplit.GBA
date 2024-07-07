@@ -23,79 +23,80 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.btnAddSplit = new System.Windows.Forms.Button();
-			this.flowMain = new System.Windows.Forms.FlowLayoutPanel();
-			this.flowOptions = new System.Windows.Forms.FlowLayoutPanel();
-			this.lblNote = new System.Windows.Forms.Label();
-			this.flowMain.SuspendLayout();
-			this.flowOptions.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// btnAddSplit
-			// 
-			this.btnAddSplit.Location = new System.Drawing.Point(3, 3);
-			this.btnAddSplit.Name = "btnAddSplit";
-			this.btnAddSplit.Size = new System.Drawing.Size(57, 21);
-			this.btnAddSplit.TabIndex = 0;
-			this.btnAddSplit.Text = "Add Split";
-			this.btnAddSplit.UseVisualStyleBackColor = true;
-			this.btnAddSplit.Click += new System.EventHandler(this.btnAddSplit_Click);
-			// 
-			// flowMain
-			// 
-			this.flowMain.AllowDrop = true;
-			this.flowMain.AutoSize = true;
-			this.flowMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.flowMain.Controls.Add(this.flowOptions);
-			this.flowMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowMain.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowMain.Location = new System.Drawing.Point(0, 0);
-			this.flowMain.Margin = new System.Windows.Forms.Padding(0);
-			this.flowMain.Name = "flowMain";
-			this.flowMain.Size = new System.Drawing.Size(302, 27);
-			this.flowMain.TabIndex = 0;
-			this.flowMain.WrapContents = false;
-			this.flowMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowMain_DragDrop);
-			this.flowMain.DragEnter += new System.Windows.Forms.DragEventHandler(this.flowMain_DragEnter);
-			this.flowMain.DragOver += new System.Windows.Forms.DragEventHandler(this.flowMain_DragOver);
-			// 
-			// flowOptions
-			// 
-			this.flowOptions.AutoSize = true;
-			this.flowOptions.Controls.Add(this.btnAddSplit);
-			this.flowOptions.Controls.Add(this.lblNote);
-			this.flowOptions.Location = new System.Drawing.Point(0, 0);
-			this.flowOptions.Margin = new System.Windows.Forms.Padding(0);
-			this.flowOptions.Name = "flowOptions";
-			this.flowOptions.Size = new System.Drawing.Size(302, 27);
-			this.flowOptions.TabIndex = 0;
-			// 
-			// lblNote
-			// 
-			this.lblNote.Location = new System.Drawing.Point(66, 0);
-			this.lblNote.Name = "lblNote";
-			this.lblNote.Size = new System.Drawing.Size(233, 27);
-			this.lblNote.TabIndex = 1;
-			this.lblNote.Text = "Note: Offset is in Hex, Value is in Decimal. Bitwise Mask: (Value AND RAM) != Last Value";
-			this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// SplitterSettings
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoScroll = true;
-			this.AutoSize = true;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.Controls.Add(this.flowMain);
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "SplitterSettings";
-			this.Size = new System.Drawing.Size(302, 27);
-			this.Load += new System.EventHandler(this.Settings_Load);
-			this.flowMain.ResumeLayout(false);
-			this.flowMain.PerformLayout();
-			this.flowOptions.ResumeLayout(false);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.btnAddSplit = new System.Windows.Forms.Button();
+            this.flowMain = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowOptions = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblNote = new System.Windows.Forms.Label();
+            this.flowMain.SuspendLayout();
+            this.flowOptions.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // btnAddSplit
+            // 
+            this.btnAddSplit.Location = new System.Drawing.Point(3, 3);
+            this.btnAddSplit.Name = "btnAddSplit";
+            this.btnAddSplit.Size = new System.Drawing.Size(57, 21);
+            this.btnAddSplit.TabIndex = 0;
+            this.btnAddSplit.Text = "Add Split";
+            this.btnAddSplit.UseVisualStyleBackColor = true;
+            this.btnAddSplit.Click += new System.EventHandler(this.btnAddSplit_Click);
+            // 
+            // flowMain
+            // 
+            this.flowMain.AllowDrop = true;
+            this.flowMain.AutoSize = true;
+            this.flowMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowMain.Controls.Add(this.flowOptions);
+            this.flowMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowMain.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowMain.Location = new System.Drawing.Point(0, 0);
+            this.flowMain.Margin = new System.Windows.Forms.Padding(0);
+            this.flowMain.Name = "flowMain";
+            this.flowMain.Size = new System.Drawing.Size(440, 27);
+            this.flowMain.TabIndex = 0;
+            this.flowMain.WrapContents = false;
+            this.flowMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowMain_DragDrop);
+            this.flowMain.DragEnter += new System.Windows.Forms.DragEventHandler(this.flowMain_DragEnter);
+            this.flowMain.DragOver += new System.Windows.Forms.DragEventHandler(this.flowMain_DragOver);
+            // 
+            // flowOptions
+            // 
+            this.flowOptions.AutoSize = true;
+            this.flowOptions.Controls.Add(this.btnAddSplit);
+            this.flowOptions.Controls.Add(this.lblNote);
+            this.flowOptions.Location = new System.Drawing.Point(0, 0);
+            this.flowOptions.Margin = new System.Windows.Forms.Padding(0);
+            this.flowOptions.Name = "flowOptions";
+            this.flowOptions.Size = new System.Drawing.Size(440, 27);
+            this.flowOptions.TabIndex = 0;
+            // 
+            // lblNote
+            // 
+            this.lblNote.Location = new System.Drawing.Point(66, 0);
+            this.lblNote.Name = "lblNote";
+            this.lblNote.Size = new System.Drawing.Size(371, 27);
+            this.lblNote.TabIndex = 1;
+            this.lblNote.Text = "Note: Offset is in Hex, Value is in Decimal. First Split is to Auto-Start LiveSpl" +
+    "it. Bitwise Mask: (Value AND RAM) != Last Value";
+            this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // SplitterSettings
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.flowMain);
+            this.Margin = new System.Windows.Forms.Padding(0);
+            this.Name = "SplitterSettings";
+            this.Size = new System.Drawing.Size(440, 27);
+            this.Load += new System.EventHandler(this.Settings_Load);
+            this.flowMain.ResumeLayout(false);
+            this.flowMain.PerformLayout();
+            this.flowOptions.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 

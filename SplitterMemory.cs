@@ -2,70 +2,69 @@
 using System;
 using System.Diagnostics;
 namespace LiveSplit.GBA {
-	public partial class SplitterMemory {
-		private static ProgramPointer RAM = new ProgramPointer(AutoDeref.None, 0);
-		public Process Program { get; set; }
-		public bool IsHooked { get; set; } = false;
-		private DateTime lastHooked;
-		public SplitterMemory() {
-			lastHooked = DateTime.MinValue;
-		}
-		public string Pointer() {
-			return RAM.GetPointer(Program).ToString("X") + " - " + RAM.Version.ToString();
-		}
-		public T Read<T>(RAMSection section, uint address) where T : struct {
-			bool mGBA = RAM.Read<uint>(Program, 0x0, 0x30, 0x8, 0x18) == 10;
-			if (mGBA) {
-				switch (section) {
-					case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x38, 0x28, (int)address);
-					case RAMSection.EWRAM: return RAM.Read<T>(Program, 0x0, 0x40, 0x28, (int)address);
-					case RAMSection.BIOS: return RAM.Read<T>(Program, 0x0, 0x48, 0x28, (int)address);
-					case RAMSection.PALRAM: return RAM.Read<T>(Program, 0x0, 0x50, 0x28, (int)address);
-					case RAMSection.VRAM: return RAM.Read<T>(Program, 0x0, 0x58, 0x28, (int)address);
-					case RAMSection.OAM: return RAM.Read<T>(Program, 0x0, 0x60, 0x28, (int)address);
-					case RAMSection.ROM: return RAM.Read<T>(Program, 0x0, 0x68, 0x28, (int)address);
-					case RAMSection.SRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x28, (int)address);
-				}
-			}
+    public partial class SplitterMemory {
+        public Process Program { get; set; }
+        public bool IsHooked { get; set; } = false;
+        private DateTime lastHooked;
+        private IntPtr emuPtr;
+        private DateTime emuLastCheck;
+        public SplitterMemory() {
+            lastHooked = DateTime.MinValue;
+            emuLastCheck = DateTime.MinValue;
+        }
+        public string Pointer() {
+            return SetEmulator() ? emuPtr.ToString("X") : string.Empty;
+        }
+        private bool SetEmulator() {
+            if (emuLastCheck > DateTime.Now) { return emuPtr != IntPtr.Zero; }
+            emuLastCheck = DateTime.Now.AddSeconds(1);
+            Module64 mgba = Program.Module64("mgba.dll");
+            if (mgba == null) { return false; }
 
-			switch (section) {
-				case RAMSection.IWRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x10, 0x28, (int)address);
-				case RAMSection.EWRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x18, 0x28, (int)address);
-				case RAMSection.BIOS: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x20, 0x28, (int)address);
-				case RAMSection.PALRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x28, 0x28, (int)address);
-				case RAMSection.VRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x30, 0x28, (int)address);
-				case RAMSection.OAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x38, 0x28, (int)address);
-				case RAMSection.ROM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x40, 0x28, (int)address);
-				case RAMSection.SRAM: return RAM.Read<T>(Program, 0x0, 0x70, 0x8, 0x8, 0x48, 0x28, (int)address);
-			}
-			return default(T);
-		}
-		public bool HookProcess() {
-			IsHooked = Program != null && !Program.HasExited;
-			if (!IsHooked && DateTime.Now > lastHooked.AddSeconds(1)) {
-				lastHooked = DateTime.Now;
-				Process[] processes = Process.GetProcesses();
-				Program = null;
-				for (int i = 0; i < processes.Length; i++) {
-					Process process = processes[i];
-					if (process.ProcessName.Equals("EmuHawk", StringComparison.OrdinalIgnoreCase)) {
-						Program = process;
-						break;
-					}
-				}
+            MemorySearcher searcher = new MemorySearcher();
+            searcher.MemoryFilter = delegate (MemInfo info) {
+                return (long)info.RegionSize == 0x48000 && (info.AllocationProtect & 0x4) != 0;
+            };
+            emuPtr = searcher.FilterMemory(Program);
 
-				if (Program != null && !Program.HasExited) {
-					MemoryReader.Update64Bit(Program);
-					IsHooked = true;
-				}
-			}
+            return emuPtr != IntPtr.Zero;
+        }
+        public T Read<T>(RAMSection section, uint address) where T : unmanaged {
+            if (SetEmulator()) {
+                switch (section) {
+                    case RAMSection.IWRAM: return Program.Read<T>(emuPtr + 0x40000, (int)address);
+                    case RAMSection.EWRAM: return Program.Read<T>(emuPtr, (int)address);
+                }
+            }
+            return default(T);
+        }
+        public bool HookProcess() {
+            IsHooked = Program != null && !Program.HasExited;
+            if (!IsHooked && DateTime.Now > lastHooked.AddSeconds(1)) {
+                lastHooked = DateTime.Now;
+                emuPtr = IntPtr.Zero;
+                Process[] processes = Process.GetProcesses();
+                Program = null;
+                for (int i = 0; i < processes.Length; i++) {
+                    Process process = processes[i];
+                    if (process.ProcessName.Equals("EmuHawk", StringComparison.OrdinalIgnoreCase)) {
+                        Program = process;
+                        break;
+                    }
+                }
 
-			return IsHooked;
-		}
-		public void Dispose() {
-			if (Program != null) {
-				Program.Dispose();
-			}
-		}
-	}
+                if (Program != null && !Program.HasExited) {
+                    MemoryReader.Update64Bit(Program);
+                    IsHooked = true;
+                }
+            }
+
+            return IsHooked;
+        }
+        public void Dispose() {
+            if (Program != null) {
+                Program.Dispose();
+            }
+        }
+    }
 }
